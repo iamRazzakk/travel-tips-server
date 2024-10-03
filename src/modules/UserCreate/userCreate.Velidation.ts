@@ -16,10 +16,6 @@ const createSignUpValidationSchema = z.object({
         invalid_type_error: 'Password is must be a string',
       })
       .min(6, 'Password must be at least 6 characters long'),
-    confirmPassword: z.string({
-      required_error: 'confirmPassword is required',
-      invalid_type_error: 'confirmPassword is must be a string',
-    }),
     role: z
       .string({
         required_error: 'Role is required',
