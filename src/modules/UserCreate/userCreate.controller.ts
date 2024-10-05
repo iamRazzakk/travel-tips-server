@@ -45,7 +45,7 @@ const createUserController = catchAsync(async (req: Request, res: Response) => {
 });
 const updateUserController = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.id;
-
+  console.log(req.body);
   let updateData = {};
 
   // Check if data is defined and is a valid JSON string
