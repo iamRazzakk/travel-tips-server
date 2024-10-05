@@ -1,42 +1,25 @@
-import config from "../../config";
-import { UserSchema } from "../UserCreate/userCreate.Model";
-import { TLogin } from "./auth.interface";
-import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
-const LoginUser = async (loginData: TLogin) => {
-    const { email, password } = loginData;
+import bcrypt from 'bcryptjs';
+import { UserSchema } from '../UserCreate/userCreate.Model';
 
-    // Trim email to avoid issues with spaces
-    const trimmedEmail = email.trim();
+const LoginUser = async (email: string, password: string) => {
+    // User email diye check kora
 
-    const user = await UserSchema.findOne({ email: trimmedEmail }).select(
-        "+password"
-    );
-
+    const user = await UserSchema.findOne({ email });
     if (!user) {
-        throw new Error("Invalid email or password");
+        throw new Error('Invalid email or password');
     }
 
-    // Compare the trimmed password
-    const isMatch = await bcrypt.compare(password.trim(), user.password);
+
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-        throw new Error("Invalid email or password");
+        throw new Error('Invalid email or password');
     }
-    // require('crypto').randomBytes(64).toString('hex')
-    const accessToken = jwt.sign(
-        { _id: user._id, email: user.email, role: user.role },
-        config.JWT_SECRET as string,
-        { expiresIn: config.JWT_E_IN as string }
-    );
 
-    const refreshToken = jwt.sign(
-        { _id: user._id, email: user.email, role: user.role },
-        config.REFRESH_JWT_SECRET as string,
-        { expiresIn: config.JWT_R_IN as string }
-    );
-
-    return { user, accessToken, refreshToken };
+    return user;
 };
-export const singInUserService = {
-    LoginUser
-}
+
+
+
+export const signInUserService = {
+    LoginUser,
+};

@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { TUser } from './userCreate.interface';
-import bcrypt from "bcryptjs"
+// import bcrypt from "bcryptjs"
 const userSchema = new Schema<TUser>({
   name: { type: String, required: [true, 'Full Name is required'], trim: true },
   email: {
@@ -28,23 +28,23 @@ const userSchema = new Schema<TUser>({
 }, { timestamps: true });
 
 // Hash the password before saving the user
-userSchema.pre('save', async function (next) {
-  const user = this;
+// userSchema.pre('save', async function (next) {
+//   const user = this;
 
-  // Check if the password is modified
-  if (user.isModified('password')) {
-    try {
-      const saltRounds = 12;
-      const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+//   // Check if the password is modified
+//   if (user.isModified('password')) {
+//     try {
+//       const saltRounds = 12;
+//       const hashedPassword = await bcrypt.hash(user.password, saltRounds);
 
-      // Replace the plain password with the hashed password
-      user.password = hashedPassword;
+//       // Replace the plain password with the hashed password
+//       user.password = hashedPassword;
 
-    } catch (error) {
-      return next(error);
-    }
-  }
+//     } catch (error) {
+//       return next(error);
+//     }
+//   }
 
-  next();
-});
+//   next();
+// });
 export const UserSchema = model<TUser>('User', userSchema);
