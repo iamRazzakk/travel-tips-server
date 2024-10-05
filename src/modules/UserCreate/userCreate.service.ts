@@ -1,4 +1,6 @@
-import { TUser } from './userCreate.interface';
+import { NOT_FOUND } from 'http-status';
+import AppError from '../../Errors/AppError';
+import { TUser, TUserUpdate } from './userCreate.interface';
 import { UserSchema } from './userCreate.Model';
 import bcrypt from 'bcryptjs';
 
@@ -23,6 +25,33 @@ const createUser = async (payload: TUser) => {
   return newUser;
 };
 
+
+
+// for update user
+const updateUser = async (userId: string, updateData: TUserUpdate) => {
+  // Check if the user exists
+  const user = await UserSchema.findById(userId);
+  if (!user) {
+    throw new AppError(NOT_FOUND, "User not found")
+  }
+
+  // If a password is being updated, hash it before saving
+  if (updateData.password) {
+    updateData.password = await bcrypt.hash(updateData.password, 10);
+  }
+
+  // Update the user
+  const updatedUser = await UserSchema.findByIdAndUpdate(userId, updateData, {
+    new: true,
+    runValidators: true,
+  });
+
+  return updatedUser;
+};
 export const signUpUser = {
   createUser,
+
 };
+export const userUpdateService = {
+  updateUser
+}

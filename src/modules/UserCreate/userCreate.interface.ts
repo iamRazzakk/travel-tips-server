@@ -8,5 +8,15 @@ export type TUser = {
   role?: userRole;
   bio?: string;
   address: string;
+  image?: string
+};
+export type TUserUpdate = {
+  name?: string;
+  email?: string;
+  password?: string;
+  role?: 'USER' | 'ADMIN';
+  bio?: string;
+  address?: string;
+  image?: string;
 };
 export type TUserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];

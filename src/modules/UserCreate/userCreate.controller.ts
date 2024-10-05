@@ -2,12 +2,13 @@ import { Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
-import { signUpUser } from './userCreate.service';
+import { signUpUser, userUpdateService } from './userCreate.service';
 import jwt from 'jsonwebtoken';
 import config from '../../config';
 
 const createUserController = catchAsync(async (req: Request, res: Response) => {
   const userData = req.body;
+
 
   // Create the new user using the service
   const newUser = await signUpUser.createUser(userData);
@@ -42,7 +43,38 @@ const createUserController = catchAsync(async (req: Request, res: Response) => {
     data: newUser,
   });
 });
+const updateUserController = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.id;
+
+  let updateData = {};
+
+  // Check if data is defined and is a valid JSON string
+  if (req.body.data) {
+    try {
+      updateData = JSON.parse(req.body.data);
+    } catch (error) {
+      return res.status(httpStatus.BAD_REQUEST).json({ message: 'Invalid data format' });
+    }
+  }
+
+  // Include image path if file was uploaded
+  if (req.file) {
+    updateData.image = req.file.path;
+  }
+
+  // Update the user using the service
+  const updatedUser = await userUpdateService.updateUser(userId, updateData);
+
+  // Send the response with the updated user
+  return sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User updated successfully',
+    data: updatedUser,
+  });
+});
 
 export const userCreateController = {
   createUserController,
+  updateUserController
 };

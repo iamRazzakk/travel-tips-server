@@ -25,26 +25,10 @@ const userSchema = new Schema<TUser>({
     required: [true, 'Address is required'],
     trim: true,
   },
+  image: {
+    type: String,
+    default: null,
+    // required: false,
+  }
 }, { timestamps: true });
-
-// Hash the password before saving the user
-// userSchema.pre('save', async function (next) {
-//   const user = this;
-
-//   // Check if the password is modified
-//   if (user.isModified('password')) {
-//     try {
-//       const saltRounds = 12;
-//       const hashedPassword = await bcrypt.hash(user.password, saltRounds);
-
-//       // Replace the plain password with the hashed password
-//       user.password = hashedPassword;
-
-//     } catch (error) {
-//       return next(error);
-//     }
-//   }
-
-//   next();
-// });
 export const UserSchema = model<TUser>('User', userSchema);
