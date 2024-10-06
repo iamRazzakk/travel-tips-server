@@ -3,6 +3,7 @@ import { ValidationRequest } from "../../middleware/ValidationRequest";
 import { PostValidationSchema } from "./post.validation";
 import { PostController } from "./post.controller";
 import auth from "../../middleware/auth";
+import { multipleMulterUpload } from "../../config/multer.config.multiple";
 
 const router = Router();
 
@@ -10,7 +11,8 @@ const router = Router();
 router.post(
     "/",
     auth("USER"),
-    ValidationRequest(PostValidationSchema.createPostValidationSchema),
+    multipleMulterUpload,
+    // ValidationRequest(PostValidationSchema.createPostValidationSchema),
     PostController.createSinglePost
 );
 
@@ -20,18 +22,18 @@ router.get("/", PostController.getAllPosts);
 // Get a single post by ID
 router.get("/:id", PostController.getSinglePostById);
 
-// Update a post (Admin only)
+// Update a post (user only)
 router.put(
     "/:id",
-    auth("ADMIN"),
+    auth("USER"),
     ValidationRequest(PostValidationSchema.updatePostValidationSchema),
     PostController.updatePost
 );
 
-// Delete a post (Admin only)
+// Delete a post (user only)
 router.delete(
     "/:id",
-    auth("ADMIN"),
+    auth("USER"),
     PostController.deletePost
 );
 

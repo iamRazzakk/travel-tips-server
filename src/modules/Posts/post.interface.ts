@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+
 type Categorys =
     | 'Adventure'
     | 'Business Travel'
@@ -23,11 +24,15 @@ type Categorys =
     | 'Volunteer Travel'
     | 'Travel Gear & Reviews'
     | 'Budget Travel';
+
 export interface TPost {
     title: string;
     content: string;
+    markdownContent?: string;
     images: string[];
-    category: Categorys
+    category: Categorys;
     isPremium: boolean;
     user: Types.ObjectId;
+    tags?: string[];
+    status?: 'published' | 'draft' | 'deleted';
 }

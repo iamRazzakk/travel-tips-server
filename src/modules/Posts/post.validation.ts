@@ -10,7 +10,10 @@ const createPostValidationSchema = z.object({
             required_error: 'Content is required',
             invalid_type_error: 'Content must be a string',
         }),
-        images: z.array(z.string()).min(1, 'At least one image is required'),
+        markdownContent: z.string().optional(),
+        images: z.array(
+            z.string().url({ message: 'Each image must be a valid URL' }).nonempty({ message: 'Image URL cannot be empty' })
+        ).min(1, 'At least one image is required'),
         category: z.enum([
             'Adventure',
             'Business Travel',
@@ -75,7 +78,10 @@ const updatePostValidationSchema = z.object({
             'Travel Gear & Reviews',
             'Budget Travel',
         ]).optional(),
-        isPremium: z.boolean().optional().default(false),
+        isPremium: z.union([
+            z.boolean(),
+            z.string().transform(val => val === 'true')
+        ]).optional().default(false),
         user: z.string().nonempty({ message: 'User ID is required' }).optional(),
     }).refine(data => {
         // Ensure at least one field is provided for the update
