@@ -33,7 +33,7 @@ const getPostFromDB = async (postId: string) => {
 
 const updatePostInDB = async (postId: string, payload: Partial<TPost>) => {
     const updatedPost = await postModel.findByIdAndUpdate(postId, payload, { new: true, runValidators: true });
-    console.log("Updated Post:", updatedPost);
+    // console.log("Updated Post:", updatedPost);
     if (!updatedPost) {
         throw new AppError(httpStatus.NOT_FOUND, "Post not found");
     }

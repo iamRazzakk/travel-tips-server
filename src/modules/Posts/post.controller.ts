@@ -7,8 +7,10 @@ import { TPost } from "./post.interface";
 
 // Controller to create a single post
 const createSinglePost = catchAsync(async (req: Request, res: Response) => {
-    const { title, content, category, isPremium, tags } = req.body;
-
+    // console.log(req.body);
+    const { title, content, category, isPremium, tags, user } = req.body;
+    const userData = req.user
+    console.log(userData);
     const images = req.files ? (req.files as Express.Multer.File[]).map(file => file.path) : [];
 
     // console.log(req.body, "Body: ");
@@ -20,7 +22,7 @@ const createSinglePost = catchAsync(async (req: Request, res: Response) => {
         images,
         category,
         isPremium: typeof isPremium === 'string' ? isPremium === 'true' : isPremium,
-        user: req.user._id,
+        user: user,
         tags: tags ? tags.split(',').map((tag: string) => tag.trim()) : undefined,
         status: 'draft',
     };
